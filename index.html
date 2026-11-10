@@ -1,60 +1,99 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Domuscire - Casa Inteligente</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070b14">
+  <title>domuscire — Casa inteligente</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="app">
+  <main id="app">
+    <section id="tela-inicial" class="tela tela-inicial ativa" aria-labelledby="titulo">
+      <div class="marca">SISTEMA RESIDENCIAL EXPERIMENTAL <span>v. 01</span></div>
+      <div class="inicio-conteudo">
+        <p class="sobretitulo">UMA EXPERIÊNCIA INTERATIVA</p>
+        <h1 id="titulo" class="titulo">domuscire</h1>
+        <p class="subtitulo">A casa aprende com você.</p>
+        <nav class="botoes-menu" aria-label="Menu principal">
+          <button id="btn-jogar" class="btn btn-principal" type="button">Jogar</button>
+          <button id="btn-config" class="btn" type="button">Configurações</button>
+          <button id="btn-credito" class="btn" type="button">Créditos</button>
+        </nav>
+      </div>
+      <p class="rodape-menu">PROGRAMA DE MORADIA EXPERIMENTAL <span>●</span> CONEXÃO ESTÁVEL</p>
+    </section>
 
-    <!-- Tela Inicial -->
-    <section id="tela-inicial" class="tela ativa">
-      <h1 class="titulo">domuscire</h1>
-      <div class="botoes">
-        <button id="btn-jogar" class="btn">Jogar</button>
-        <button id="btn-config" class="btn">Configurações</button>
-        <button id="btn-credito" class="btn">Crédito - Milps Julips</button>
+    <section id="cutscene" class="tela tela-cutscene" aria-label="Introdução da história">
+      <canvas id="canvas-cutscene" aria-hidden="true"></canvas>
+      <div class="vinheta" aria-hidden="true"></div>
+      <div class="cabecalho-cena">
+        <span id="indicador-cena">REGISTRO DE CHEGADA</span>
+        <button id="btn-pular" class="btn-link" type="button">Pular introdução <span aria-hidden="true">↗</span></button>
+      </div>
+      <div class="texto-cutscene" aria-live="polite" aria-atomic="true">
+        <p id="rotulo-cena" class="rotulo-cena"></p>
+        <p id="texto-cena" class="texto-cena"></p>
+      </div>
+      <p id="titulo-revelado" class="titulo-revelado">domuscire</p>
+      <div class="controles-cena">
+        <span id="progresso-cena" class="progresso-cena"></span>
+        <button id="btn-continuar" class="btn btn-continuar" type="button">Continuar <span aria-hidden="true">→</span></button>
       </div>
     </section>
 
-    <!-- Cutscene Inicial -->
-    <section id="cutscene" class="tela">
-      <canvas id="canvas-cutscene"></canvas>
-      <div class="texto-cutscene">
-        <p>[Tela preta. O som de um veículo se aproximando...]</p>
-        <p class="narrador">A tecnologia sempre prometeu tornar nossas vidas mais simples. Casas capazes de antecipar nossas necessidades, ambientes que se adaptam aos nossos hábitos e sistemas que aprendem conosco.</p>
-        <p>[A câmera se aproxima da entrada da residência...]</p>
-        <p class="narrador">Agora, essa promessa está prestes a se tornar realidade.</p>
-        <p>[O protagonista desce do veículo...]</p>
-        <p class="sistema">“Bem-vindo à Residência Experimental. Sua participação é fundamental para o desenvolvimento da próxima geração de moradias inteligentes.”</p>
-        <p>[A porta se fecha suavemente...]</p>
-        <p class="narrador">Selecionado para participar de um programa experimental, você terá a oportunidade de viver em uma casa projetada para aprender, evoluir e se adaptar a você.</p>
-        <p>Durante sua estadia, cada escolha, cada hábito e cada interação ajudarão a moldar essa experiência.</p>
-        <p class="sistema">“Configuração inicial concluída. Iniciando protocolo de adaptação do residente.”</p>
-        <p class="narrador">Mas viver em uma casa que aprende com você também significa aprender a viver com ela.</p>
-        <p>[A câmera percorre os cômodos e termina no protagonista...]</p>
-        <p class="narrador">Sua nova vida começa agora.</p>
-      </div>
-    </section>
-
-    <!-- Pergunta Inicial -->
-    <section id="pergunta-inicial" class="tela">
-      <p class="pergunta tremor">Você realmente deseja iniciar?:</p>
+    <section id="pergunta-inicial" class="tela tela-pergunta" aria-labelledby="pergunta-confirmacao">
+      <p class="sinal">SINAL RECEBIDO <span>●</span></p>
+      <p id="pergunta-confirmacao" class="pergunta tremor">Você realmente deseja iniciar?</p>
       <div class="respostas">
-        <button class="btn resposta" data-resposta="sim">Sim</button>
-        <button class="btn resposta" data-resposta="nao">Não</button>
+        <button class="btn btn-principal resposta" data-resposta="sim" type="button">Sim</button>
+        <button class="btn resposta" data-resposta="nao" type="button">Não</button>
       </div>
     </section>
 
-    <!-- Tela "agora já é tarde" -->
-    <section id="tela-tarde" class="tela">
+    <section id="tela-tarde" class="tela tela-tarde" aria-live="assertive">
+      <p class="sinal">CONEXÃO ENCERRADA</p>
       <p class="mensagem-tarde">Agora já é tarde.</p>
     </section>
 
-  </div>
+    <section id="tela-historia" class="tela tela-historia" aria-live="polite">
+      <p id="etapa-historia" class="sinal">PROTOCOLO DE ADAPTAÇÃO</p>
+      <p id="pergunta-historia" class="pergunta"></p>
+      <p id="contexto-historia" class="contexto-historia"></p>
+      <div id="respostas-historia" class="respostas respostas-historia"></div>
+    </section>
 
+    <section id="tela-final" class="tela tela-final" aria-live="polite">
+      <p class="sinal">REGISTRO ATUALIZADO</p>
+      <h2 id="titulo-final"></h2>
+      <p id="texto-final"></p>
+      <button id="btn-voltar" class="btn btn-principal" type="button">Voltar ao início</button>
+    </section>
+
+    <dialog id="dialog-config" class="dialogo">
+      <form method="dialog">
+        <button class="fechar-dialogo" aria-label="Fechar configurações" value="close">×</button>
+        <p class="sinal">PREFERÊNCIAS</p>
+        <h2>Configurações</h2>
+        <label class="opcao-config">
+          <span>Som ambiente</span>
+          <input id="config-som" type="checkbox">
+        </label>
+        <p class="ajuda-config">O som é sintetizado no navegador durante a introdução.</p>
+        <button class="btn btn-principal" value="close">Concluir</button>
+      </form>
+    </dialog>
+
+    <dialog id="dialog-creditos" class="dialogo">
+      <form method="dialog">
+        <button class="fechar-dialogo" aria-label="Fechar créditos" value="close">×</button>
+        <p class="sinal">EQUIPE DO PROJETO</p>
+        <h2>Créditos</h2>
+        <p class="credito-nome">Milps Julips</p>
+        <button class="btn btn-principal" value="close">Voltar</button>
+      </form>
+    </dialog>
+  </main>
   <script src="script.js"></script>
 </body>
 </html>
