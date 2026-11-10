@@ -44,10 +44,13 @@
 
     <section id="pergunta-inicial" class="tela tela-pergunta" aria-labelledby="pergunta-confirmacao">
       <p class="sinal">SINAL RECEBIDO <span>●</span></p>
+      <p id="rotulo-pergunta-inicial" class="rotulo-cena rotulo-personagem">SISTEMA DA CASA</p>
       <p id="pergunta-confirmacao" class="pergunta tremor">Você realmente deseja iniciar?</p>
+      <p id="contexto-pergunta-inicial" class="contexto-historia"></p>
       <div class="respostas">
-        <button class="btn btn-principal resposta" data-resposta="sim" type="button">Sim</button>
+        <button class="btn btn-principal resposta" data-resposta="sim" type="button">Sim, iniciar</button>
         <button class="btn resposta" data-resposta="nao" type="button">Não</button>
+        <button class="btn resposta" data-resposta="informacoes" type="button">Quero saber mais</button>
       </div>
     </section>
 
@@ -58,6 +61,7 @@
 
     <section id="tela-historia" class="tela tela-historia" aria-live="polite">
       <p id="etapa-historia" class="sinal">PROTOCOLO DE ADAPTAÇÃO</p>
+      <p id="rotulo-pergunta-historia" class="rotulo-cena rotulo-personagem"></p>
       <p id="pergunta-historia" class="pergunta"></p>
       <p id="contexto-historia" class="contexto-historia"></p>
       <div id="respostas-historia" class="respostas respostas-historia"></div>

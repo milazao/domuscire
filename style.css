@@ -47,6 +47,22 @@ button:focus-visible {
   box-shadow: 0 0 70px rgba(13, 69, 111, 0.2), inset 0 0 60px rgba(3, 10, 20, 0.35);
 }
 
+#app::after {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  background: #03060b;
+  content: '';
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+#app.transicao::after {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .tela {
   display: none;
   position: absolute;
@@ -223,6 +239,17 @@ button:focus-visible {
 .rotulo-cena {
   margin: 0 0 14px;
   color: var(--azul);
+}
+
+.rotulo-cena:empty {
+  display: none;
+}
+
+.rotulo-personagem {
+  margin: -8px 0 18px;
+  color: var(--azul);
+  font-size: 10px;
+  letter-spacing: 0.15em;
 }
 
 .texto-cena {
