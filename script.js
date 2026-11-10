@@ -9,57 +9,55 @@ const telas = {
 
 const cenas = [
   {
-    rotulo: 'CENA',
-    texto: '[Tela preta. O som de um veículo se aproximando. Aos poucos, a imagem revela uma residência moderna, cercada por jardins e sistemas automatizados.]',
-    tipo: 'legenda'
+    visual: 'black',
+    texto: ''
   },
   {
-    rotulo: 'NARRADOR',
+    visual: 'city',
     texto: 'A tecnologia sempre prometeu tornar nossas vidas mais simples. Casas capazes de antecipar nossas necessidades, ambientes que se adaptam aos nossos hábitos e sistemas que aprendem conosco.'
   },
   {
-    rotulo: 'CENA',
-    texto: '[A câmera se aproxima da entrada da residência. As luzes se acendem automaticamente, e a porta se abre antes mesmo de o protagonista tocar a maçaneta.]',
-    tipo: 'legenda'
+    visual: 'arrival',
+    texto: ''
   },
   {
-    rotulo: 'NARRADOR',
+    visual: 'arrival',
     texto: 'Agora, essa promessa está prestes a se tornar realidade.'
   },
   {
-    rotulo: 'CENA',
-    texto: '[O protagonista desce do veículo com suas malas. Na entrada, um painel digital exibe uma mensagem de boas-vindas.]',
-    tipo: 'legenda'
+    visual: 'resident-arrives',
+    texto: ''
   },
   {
+    visual: 'welcome',
     rotulo: 'SISTEMA DA CASA',
     texto: '“Bem-vindo à Residência Experimental. Sua participação é fundamental para o desenvolvimento da próxima geração de moradias inteligentes.”',
     tipo: 'sistema'
   },
   {
-    rotulo: 'CENA',
-    texto: '[A porta se fecha suavemente atrás do protagonista. O interior é iluminado, organizado e aparentemente perfeito.]',
-    tipo: 'legenda'
+    visual: 'interior',
+    texto: ''
   },
   {
-    rotulo: 'NARRADOR',
+    visual: 'interior',
     texto: 'Selecionado para participar de um programa experimental, você terá a oportunidade de viver em uma casa projetada para aprender, evoluir e se adaptar a você.'
   },
   {
-    rotulo: 'NARRADOR',
+    visual: 'interior-interface',
     texto: 'Durante sua estadia, cada escolha, cada hábito e cada interação ajudarão a moldar essa experiência.'
   },
   {
+    visual: 'interior-glitch',
     rotulo: 'SISTEMA DA CASA',
     texto: '“Configuração inicial concluída. Iniciando protocolo de adaptação do residente.”',
     tipo: 'sistema'
   },
   {
-    rotulo: 'NARRADOR',
+    visual: 'interior-glitch',
     texto: 'Mas viver em uma casa que aprende com você também significa aprender a viver com ela.'
   },
   {
-    rotulo: 'NARRADOR',
+    visual: 'interior-title',
     texto: 'Sua nova vida começa agora.'
   }
 ];
@@ -83,6 +81,8 @@ let temporizadorTela;
 let somChegada;
 let modoCutscene = 'abertura';
 let perguntaAtual = null;
+let visualAtual = 'black';
+let temporizadorTelaPreta;
 let largura = 0;
 let altura = 0;
 let pixelRatio = 1;
@@ -110,8 +110,20 @@ function mostrarTela(tela, animar = false) {
 function desenharCena() {
   const agora = performance.now();
   const tempoDecorrido = (agora - tempoCena) / 1000;
-  const cenaAbertura = modoCutscene === 'abertura';
   contexto.clearRect(0, 0, largura, altura);
+
+  if (visualAtual === 'black') {
+    contexto.fillStyle = '#000';
+    contexto.fillRect(0, 0, largura, altura);
+    requestAnimationFrame(desenharCena);
+    return;
+  }
+
+  if (visualAtual.startsWith('interior')) {
+    desenharInterior(agora, tempoDecorrido, visualAtual);
+    requestAnimationFrame(desenharCena);
+    return;
+  }
 
   const ceu = contexto.createLinearGradient(0, 0, 0, altura);
   ceu.addColorStop(0, '#08101e');
@@ -120,41 +132,217 @@ function desenharCena() {
   contexto.fillStyle = ceu;
   contexto.fillRect(0, 0, largura, altura);
 
-  estrelas.forEach(estrela => {
-    const brilho = 0.3 + Math.sin(agora / 900 + estrela.fase) * 0.2;
-    contexto.fillStyle = `rgba(174, 218, 255, ${brilho})`;
-    contexto.fillRect(estrela.x * largura, estrela.y * altura, estrela.tamanho, estrela.tamanho);
-  });
-
+  desenharEstrelas(agora);
   desenharCidade();
   desenharTerreno();
 
-  const progressoChegada = cenaAbertura
-    ? Math.min(1, (indiceCena + tempoDecorrido * 0.2) / 3.4)
-    : 1;
-  const iluminarCasa = !cenaAbertura || indiceCena >= 1 ? 1 : Math.max(0, progressoChegada - 0.6) * 2.5;
-  desenharCasa(iluminarCasa, !cenaAbertura || indiceCena >= 1);
-  desenharJardim(agora);
-
-  if (cenaAbertura && indiceCena === 0) {
-    const escurecer = Math.max(0, 1 - tempoDecorrido / 3.2);
-    contexto.fillStyle = `rgba(0, 0, 0, ${escurecer})`;
-    contexto.fillRect(0, 0, largura, altura);
+  if (visualAtual === 'city') {
+    desenharCidadeTecnologica(agora);
+    requestAnimationFrame(desenharCena);
+    return;
   }
 
-  if (cenaAbertura && indiceCena < 5) {
-    desenharCarro(largura * (-0.25 + 0.62 * progressoChegada), altura * 0.79);
+  const progressoChegada = Math.min(1, tempoDecorrido / 5);
+  const intensidadeLuz = Math.min(1, Math.max(0, (tempoDecorrido - 0.6) / 1.8));
+  const portaAberta = visualAtual === 'arrival'
+    ? tempoDecorrido > 1.2
+    : visualAtual !== 'interior';
+  desenharCasa(intensidadeLuz, portaAberta);
+  desenharJardim(agora);
+  if (visualAtual === 'arrival' || visualAtual === 'welcome') {
+    desenharCarro(largura * (-0.2 + 0.58 * progressoChegada), altura * 0.79);
   } else {
     desenharCarro(largura * 0.37, altura * 0.79);
   }
 
-  if (!cenaAbertura || indiceCena >= 3) {
-    desenharMorador(largura * 0.47, altura * 0.79);
+  if (visualAtual === 'resident-arrives') {
+    const caminhada = Math.min(1, tempoDecorrido / 3);
+    desenharMorador(largura * (0.4 + caminhada * 0.13), altura * 0.79);
+    desenharMala(largura * (0.39 + caminhada * 0.13), altura * 0.79);
+    desenharPainelBoasVindas(agora);
+  } else if (visualAtual === 'welcome') {
+    desenharMorador(largura * 0.53, altura * 0.79);
+    desenharPainelBoasVindas(agora);
   }
 
   requestAnimationFrame(desenharCena);
 }
 
+function desenharEstrelas(agora) {
+  estrelas.forEach(estrela => {
+    const brilho = 0.3 + Math.sin(agora / 900 + estrela.fase) * 0.2;
+    contexto.fillStyle = `rgba(174, 218, 255, ${brilho})`;
+    contexto.fillRect(estrela.x * largura, estrela.y * altura, estrela.tamanho, estrela.tamanho);
+  });
+}
+
+function desenharCidadeTecnologica(agora) {
+  contexto.strokeStyle = 'rgba(80, 196, 241, 0.22)';
+  contexto.lineWidth = 1;
+  for (let faixa = 0; faixa < 5; faixa += 1) {
+    const y = altura * (0.69 + faixa * 0.055);
+    contexto.beginPath();
+    contexto.moveTo(0, y);
+    contexto.lineTo(largura, y);
+    contexto.stroke();
+  }
+
+  const pulso = (agora % 4000) / 4000;
+  contexto.fillStyle = `rgba(75, 190, 245, ${0.16 * (1 - pulso)})`;
+  contexto.beginPath();
+  contexto.ellipse(largura * (pulso * 1.3 - 0.15), altura * 0.74, largura * 0.12, altura * 0.025, 0, 0, Math.PI * 2);
+  contexto.fill();
+
+  desenharCasa(0.35 + Math.sin(agora / 900) * 0.1, false);
+  desenharJardim(agora);
+}
+
+function desenharInterior(agora, tempo, visual) {
+  const parede = contexto.createLinearGradient(0, 0, 0, altura);
+  parede.addColorStop(0, '#122335');
+  parede.addColorStop(0.72, '#1b2b38');
+  parede.addColorStop(0.73, '#25343d');
+  parede.addColorStop(1, '#111b24');
+  contexto.fillStyle = parede;
+  contexto.fillRect(0, 0, largura, altura);
+
+  contexto.fillStyle = '#0c1621';
+  contexto.fillRect(largura * 0.08, altura * 0.12, largura * 0.27, altura * 0.4);
+  contexto.fillStyle = '#132b40';
+  contexto.fillRect(largura * 0.095, altura * 0.14, largura * 0.24, altura * 0.36);
+  contexto.fillStyle = 'rgba(74, 183, 227, 0.52)';
+  contexto.fillRect(largura * 0.095, altura * 0.49, largura * 0.24, 2);
+  for (let indice = 0; indice < 5; indice += 1) {
+    const x = largura * (0.11 + indice * 0.045);
+    const y = altura * (0.22 + (indice % 2) * 0.05);
+    contexto.fillStyle = `rgba(106, 200, 239, ${0.25 + (indice % 3) * 0.12})`;
+    contexto.fillRect(x, y, largura * 0.025, altura * (0.08 + (indice % 2) * 0.08));
+  }
+
+  contexto.fillStyle = '#304554';
+  contexto.fillRect(largura * 0.6, altura * 0.2, largura * 0.27, altura * 0.44);
+  contexto.fillStyle = '#9edcff';
+  contexto.globalAlpha = visual === 'interior-glitch' && Math.sin(agora / 90) > 0.92
+    ? 0.08
+    : 0.16 + (Math.sin(agora / 700) + 1) * 0.1;
+  contexto.fillRect(largura * 0.62, altura * 0.22, largura * 0.23, altura * 0.39);
+  contexto.globalAlpha = 1;
+  contexto.strokeStyle = 'rgba(149, 220, 248, 0.5)';
+  contexto.strokeRect(largura * 0.62, altura * 0.22, largura * 0.23, altura * 0.39);
+
+  contexto.fillStyle = '#101b26';
+  contexto.fillRect(largura * 0.34, altura * 0.61, largura * 0.31, altura * 0.12);
+  contexto.fillStyle = '#273b49';
+  contexto.fillRect(largura * 0.31, altura * 0.58, largura * 0.36, altura * 0.08);
+  contexto.fillStyle = '#15232e';
+  contexto.fillRect(largura * 0.35, altura * 0.72, largura * 0.025, altura * 0.12);
+  contexto.fillRect(largura * 0.61, altura * 0.72, largura * 0.025, altura * 0.12);
+
+  const portaX = largura * 0.89;
+  const portaY = altura * 0.28;
+  const portaW = largura * 0.075;
+  const portaH = altura * 0.45;
+  contexto.fillStyle = '#0b1118';
+  contexto.fillRect(portaX, portaY, portaW, portaH);
+  contexto.fillStyle = '#486272';
+  contexto.fillRect(portaX, portaY, largura * 0.008, portaH);
+  if (visual === 'interior') {
+    const fechamento = Math.min(1, tempo / 2.4);
+    contexto.fillStyle = '#253b4a';
+    contexto.fillRect(portaX + portaW * fechamento, portaY, portaW * (1 - fechamento), portaH);
+  }
+
+  const chegadaInterior = visual === 'interior' ? Math.min(1, tempo / 3) : 1;
+  const moradorX = largura * (0.43 + chegadaInterior * 0.08);
+  desenharMorador(moradorX, altura * 0.78);
+
+  if (visual.includes('interface') || visual.includes('glitch') || visual.includes('panel')) {
+    desenharInterfaceInterior(agora, visual);
+  }
+  if (visual.includes('sensors') || visual.includes('dados') || visual.includes('privacy')) {
+    desenharSensores(agora, visual);
+  }
+  if (visual.includes('thermostat')) {
+    desenharTermostato(agora);
+  }
+
+  if (visual === 'interior-title') {
+    const fade = Math.min(0.76, Math.max(0, (tempo - 1) * 0.2));
+    contexto.fillStyle = `rgba(0, 0, 0, ${fade})`;
+    contexto.fillRect(0, 0, largura, altura);
+  }
+}
+
+function desenharInterfaceInterior(agora, visual) {
+  const x = largura * 0.68;
+  const y = altura * 0.27;
+  const w = largura * 0.18;
+  const h = altura * 0.3;
+  contexto.fillStyle = 'rgba(51, 179, 231, 0.09)';
+  contexto.fillRect(x, y, w, h);
+  contexto.strokeStyle = 'rgba(119, 222, 255, 0.8)';
+  contexto.strokeRect(x, y, w, h);
+  contexto.fillStyle = '#a4eaff';
+  contexto.font = `${Math.max(9, largura * 0.011)}px monospace`;
+  contexto.fillText(visual === 'interior-glitch' ? 'ADAPTANDO...' : 'RESIDÊNCIA / ATIVA', x + 10, y + 20);
+  for (let linha = 0; linha < 4; linha += 1) {
+    const extensao = w * (0.3 + ((linha * 7 + Math.floor(agora / 300) % 4) % 6) / 10);
+    contexto.fillStyle = linha === 2 ? '#7ce5bb' : 'rgba(123, 205, 235, 0.62)';
+    contexto.fillRect(x + 10, y + 38 + linha * 15, extensao, 2);
+  }
+  contexto.beginPath();
+  contexto.arc(x + w * 0.78, y + h * 0.73, 14 + Math.sin(agora / 350) * 3, 0, Math.PI * 2);
+  contexto.strokeStyle = '#77d9fb';
+  contexto.stroke();
+}
+
+function desenharSensores(agora, visual) {
+  const pontos = [[0.2, 0.3], [0.47, 0.52], [0.74, 0.37], [0.83, 0.68]];
+  const alerta = visual.includes('dados');
+  pontos.forEach(([px, py], indice) => {
+    const cor = alerta && indice === 1 ? '#ff9e59' : '#74e7a7';
+    const pulso = 0.5 + (Math.sin(agora / 250 + indice) + 1) * 0.2;
+    contexto.globalAlpha = pulso;
+    contexto.strokeStyle = cor;
+    contexto.beginPath();
+    contexto.arc(largura * px, altura * py, 7 + (indice === 1 ? pulso * 5 : 0), 0, Math.PI * 2);
+    contexto.stroke();
+    contexto.globalAlpha = 1;
+    contexto.fillStyle = cor;
+    contexto.fillRect(largura * px - 2, altura * py - 2, 4, 4);
+  });
+}
+
+function desenharTermostato(agora) {
+  const x = largura * 0.76;
+  const y = altura * 0.5;
+  contexto.fillStyle = '#0e1b27';
+  contexto.fillRect(x, y, largura * 0.08, altura * 0.13);
+  contexto.strokeStyle = '#70d7f5';
+  contexto.strokeRect(x, y, largura * 0.08, altura * 0.13);
+  contexto.fillStyle = '#b7f0ff';
+  contexto.font = `${Math.max(12, largura * 0.018)}px monospace`;
+  contexto.fillText(`${21 + Math.floor((Math.sin(agora / 900) + 1) * 2)}°`, x + 10, y + 31);
+}
+
+function desenharMala(x, y) {
+  contexto.fillStyle = '#263d4d';
+  contexto.fillRect(x, y - altura * 0.055, largura * 0.027, altura * 0.05);
+  contexto.strokeStyle = '#83b9d1';
+  contexto.strokeRect(x + largura * 0.006, y - altura * 0.063, largura * 0.014, altura * 0.01);
+}
+
+function desenharPainelBoasVindas(agora) {
+  const x = largura * 0.54;
+  const y = altura * 0.47;
+  contexto.fillStyle = 'rgba(16, 43, 58, 0.9)';
+  contexto.fillRect(x, y, largura * 0.07, altura * 0.06);
+  contexto.strokeStyle = `rgba(123, 226, 255, ${0.55 + (Math.sin(agora / 350) + 1) * 0.2})`;
+  contexto.strokeRect(x, y, largura * 0.07, altura * 0.06);
+  contexto.fillStyle = '#a4eaff';
+  contexto.fillRect(x + largura * 0.01, y + altura * 0.019, largura * 0.05, 2);
+  contexto.fillRect(x + largura * 0.01, y + altura * 0.034, largura * 0.035, 2);
+}
 function desenharCidade() {
   const base = altura * 0.65;
   const predios = [
@@ -317,6 +505,8 @@ function redimensionarCanvas() {
 function exibirCena() {
   const cena = cenas[indiceCena];
   const revelacaoFinal = indiceCena === cenas.length - 1;
+  visualAtual = cena.visual;
+  telas.cutscene.classList.toggle('sem-dialogo', !cena.texto);
   rotuloCena.textContent = cena.rotulo === 'SISTEMA DA CASA' ? cena.rotulo : '';
   textoCena.textContent = cena.texto;
   textoCena.className = `texto-cena ${cena.tipo || ''}`;
@@ -324,19 +514,21 @@ function exibirCena() {
   document.getElementById('titulo-revelado').classList.toggle('visivel', revelacaoFinal);
   indicadorCena.textContent = indiceCena < 4 ? 'REGISTRO DE CHEGADA' : 'PROTOCOLO DE ADAPTAÇÃO';
   progressoCena.textContent = `${String(indiceCena + 1).padStart(2, '0')} / ${String(cenas.length).padStart(2, '0')}`;
-  document.getElementById('btn-pular').hidden = false;
+  document.getElementById('btn-pular').hidden = cena.visual === 'black';
   btnContinuar.innerHTML = indiceCena === cenas.length - 1
     ? 'Prosseguir <span aria-hidden="true">→</span>'
     : 'Continuar <span aria-hidden="true">→</span>';
+  atualizarTelaPreta();
 }
 
 function iniciarCenaPergunta(id, animar = true) {
   modoCutscene = 'pergunta';
   perguntaAtual = id;
+  visualAtual = perguntas[id].visual;
   tempoCena = performance.now();
   rotuloCena.textContent = '';
-  textoCena.textContent = perguntas[id].cena;
-  textoCena.className = 'texto-cena legenda';
+  textoCena.textContent = '';
+  telas.cutscene.classList.add('sem-dialogo');
   telas.cutscene.classList.remove('revelacao-final');
   document.getElementById('titulo-revelado').classList.remove('visivel');
   indicadorCena.textContent = 'CENA — PROTOCOLO DE ADAPTAÇÃO';
@@ -344,7 +536,14 @@ function iniciarCenaPergunta(id, animar = true) {
   document.getElementById('btn-pular').hidden = true;
   btnContinuar.innerHTML = 'Ver pergunta <span aria-hidden="true">→</span>';
   mostrarTela(telas.cutscene, animar);
+  atualizarTelaPreta();
   redimensionarCanvas();
+}
+
+function atualizarTelaPreta() {
+  const preto = telas.cutscene.classList.contains('ativa') && visualAtual === 'black';
+  document.body.classList.toggle('cena-preta', preto);
+  app.classList.toggle('cena-preta', preto);
 }
 
 function mostrarPergunta(id, animar = true) {
@@ -413,26 +612,42 @@ function iniciarSomChegada() {
 
 function iniciarCutscene() {
   clearTimeout(temporizadorRetorno);
+  clearTimeout(temporizadorTelaPreta);
   modoCutscene = 'abertura';
   perguntaAtual = null;
   indiceCena = 0;
   tempoCena = performance.now();
   exibirCena();
   mostrarTela(telas.cutscene);
+  atualizarTelaPreta();
   redimensionarCanvas();
   iniciarSomChegada();
+  temporizadorTelaPreta = setTimeout(() => {
+    if (telas.cutscene.classList.contains('ativa')
+      && modoCutscene === 'abertura'
+      && visualAtual === 'black') {
+      avancarCutscene();
+    }
+  }, 1800);
 }
 
 function avancarCutscene() {
+  clearTimeout(temporizadorTelaPreta);
   if (modoCutscene === 'pergunta') {
     mostrarPergunta(perguntaAtual);
     return;
   }
 
   if (indiceCena < cenas.length - 1) {
+    const saiuDaTelaPreta = visualAtual === 'black';
     indiceCena += 1;
     tempoCena = performance.now();
     exibirCena();
+    if (saiuDaTelaPreta) {
+      app.classList.add('revelando');
+      setTimeout(() => app.classList.remove('revelando'), 1500);
+    }
+    redimensionarCanvas();
     return;
   }
   iniciarCenaPergunta('confirmacao');
@@ -440,7 +655,7 @@ function avancarCutscene() {
 
 const perguntas = {
   confirmacao: {
-    cena: '[As malas são colocadas no hall. A porta se fecha sozinha, as luzes acendem e o painel da entrada desperta diante do novo morador.]',
+    visual: 'interior-panel',
     personagem: 'SISTEMA DA CASA',
     pergunta: 'Você realmente deseja iniciar?',
     contexto: '“Posso começar a adaptação da residência agora. Como deseja prosseguir?”',
@@ -451,7 +666,7 @@ const perguntas = {
     ]
   },
   informacoes: {
-    cena: '[O painel muda para uma tela de permissões. Ícones de sensores e cômodos aparecem, enquanto a casa aguarda uma resposta.]',
+    visual: 'interior-privacy',
     personagem: 'SISTEMA DA CASA',
     etapa: 'CENTRAL DE PRIVACIDADE',
     pergunta: 'Que tipo de informação você gostaria de conhecer antes de começar?',
@@ -463,7 +678,7 @@ const perguntas = {
     ]
   },
   inicio: {
-    cena: '[Um painel acende na parede. Um círculo azul percorre os sensores do ambiente e para diante do protagonista.]',
+    visual: 'interior-sensors',
     personagem: 'SISTEMA DA CASA',
     etapa: 'PROTOCOLO DE ADAPTAÇÃO',
     pergunta: 'Para adaptar a casa aos seus hábitos, como você gostaria de configurar a residência?',
@@ -475,7 +690,7 @@ const perguntas = {
     ]
   },
   dados: {
-    cena: '[A interface projeta uma lista de sensores ativos. Um indicador laranja pisca ao lado da palavra “hábitos”.]',
+    visual: 'interior-dados',
     personagem: 'SISTEMA DA CASA',
     etapa: 'PERMISSÕES DE DADOS',
     pergunta: 'Quais dados você permite que eu use para preparar a sua estadia?',
@@ -487,7 +702,7 @@ const perguntas = {
     ]
   },
   personalizar: {
-    cena: '[As lâmpadas mudam lentamente de intensidade. O termostato exibe três níveis e aguarda a escolha do residente.]',
+    visual: 'interior-thermostat',
     personagem: 'SISTEMA DA CASA',
     etapa: 'AJUSTE DE AMBIENTE',
     pergunta: 'Como prefere que eu ajuste o ambiente durante sua estadia?',
@@ -499,7 +714,7 @@ const perguntas = {
     ]
   },
   privacidade: {
-    cena: '[O painel apresenta os controles de cada cômodo. Uma luz verde indica os sensores que podem ser desligados.]',
+    visual: 'interior-privacy',
     personagem: 'SISTEMA DA CASA',
     etapa: 'CONTROLES DO RESIDENTE',
     pergunta: 'Como você gostaria de administrar os sensores e as permissões da residência?',

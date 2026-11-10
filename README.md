@@ -1,9 +1,11 @@
 # domuscire — Casa inteligente
 
 Protótipo narrativo de perguntas e respostas sobre uma residência experimental
-inteligente. As descrições das cenas aparecem na tela; cada pergunta é precedida
-por uma cutscene, feita por um personagem e oferece três escolhas. As decisões
-abrem caminhos diferentes na história.
+inteligente. A introdução é encenada com animações geométricas — começa com a
+tela totalmente preta e mostra a chegada, a casa e o interior. As falas do
+narrador aparecem como legendas sobre a cena; comandos de cena são representados
+visualmente, não exibidos como texto. Cada pergunta tem uma cutscene e oferece
+três escolhas.
 
 ## Como executar
 

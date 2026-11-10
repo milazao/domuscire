@@ -28,6 +28,10 @@ body {
     #070b14;
 }
 
+body.cena-preta {
+  background: #000;
+}
+
 button {
   font: inherit;
 }
@@ -47,6 +51,12 @@ button:focus-visible {
   box-shadow: 0 0 70px rgba(13, 69, 111, 0.2), inset 0 0 60px rgba(3, 10, 20, 0.35);
 }
 
+#app.cena-preta {
+  border-color: #000;
+  background: #000;
+  box-shadow: none;
+}
+
 #app::after {
   position: absolute;
   z-index: 5;
@@ -61,6 +71,18 @@ button:focus-visible {
 #app.transicao::after {
   opacity: 1;
   pointer-events: auto;
+}
+
+#app.revelando::after {
+  z-index: 6;
+  background: #000;
+  opacity: 1;
+  pointer-events: none;
+  animation: revelar-cena 1.5s ease forwards;
+}
+
+@keyframes revelar-cena {
+  to { opacity: 0; }
 }
 
 .tela {
@@ -183,6 +205,14 @@ button:focus-visible {
   display: flex;
 }
 
+.cena-preta .cabecalho-cena,
+.cena-preta .vinheta,
+.cena-preta .texto-cutscene,
+.cena-preta .titulo-revelado,
+.cena-preta .controles-cena {
+  visibility: hidden;
+}
+
 #canvas-cutscene,
 .vinheta {
   position: absolute;
@@ -190,6 +220,10 @@ button:focus-visible {
   inset: 0;
   width: 100%;
   height: 100%;
+}
+
+.cena-preta #canvas-cutscene {
+  z-index: 1;
 }
 
 .vinheta {
@@ -230,6 +264,10 @@ button:focus-visible {
   border-left: 2px solid var(--azul);
   backdrop-filter: blur(4px);
   transition: opacity 500ms ease;
+}
+
+.sem-dialogo .texto-cutscene {
+  visibility: hidden;
 }
 
 .revelacao-final .texto-cutscene {
