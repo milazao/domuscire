@@ -1,0 +1,319 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap');
+
+:root {
+  color-scheme: dark;
+  --fundo: #080d16;
+  --painel: #101b2b;
+  --azul: #60c9ff;
+  --texto: #e9f4ff;
+  --cinza: #9caec0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(ellipse at 50% 40%, #14243a 0%, #080d16 65%),
+    var(--fundo);
+  color: var(--texto);
+  font-family: "Share Tech Mono", monospace;
+}
+
+button {
+  font: inherit;
+}
+
+.game {
+  width: min(1000px, 96vw);
+  min-height: min(650px, 94vh);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #2c4965;
+  background: linear-gradient(145deg, #101b2b, #080d16 70%);
+  box-shadow: 0 0 50px #071a2b;
+}
+
+.tela {
+  min-height: min(650px, 94vh);
+  padding: 32px;
+}
+
+.escondida {
+  display: none !important;
+}
+
+.tela-inicial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+
+.grade-fundo {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  pointer-events: none;
+  background-image:
+    linear-gradient(#60c9ff 1px, transparent 1px),
+    linear-gradient(90deg, #60c9ff 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(transparent, black, transparent);
+}
+
+.etiqueta {
+  color: var(--azul);
+  letter-spacing: 0.18em;
+  font-size: 0.8rem;
+}
+
+h1 {
+  margin: 18px 0 8px;
+  color: #fff;
+  font-family: "Press Start 2P", monospace;
+  font-size: clamp(2rem, 7vw, 4rem);
+  text-shadow: 0 0 18px #36a9ff;
+}
+
+.subtitulo {
+  color: var(--cinza);
+  font-size: 1.1rem;
+}
+
+.menu {
+  display: grid;
+  gap: 12px;
+  width: min(300px, 90%);
+  margin-top: 32px;
+  z-index: 1;
+}
+
+.botao {
+  padding: 13px 18px;
+  border: 1px solid #42627e;
+  background: #111e2e;
+  color: var(--texto);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.botao:hover,
+.botao:focus-visible {
+  border-color: var(--azul);
+  color: var(--azul);
+  box-shadow: 0 0 14px #2589c455;
+}
+
+.botao-destaque {
+  border-color: var(--azul);
+  background: #12334b;
+  color: white;
+}
+
+.rodape {
+  position: absolute;
+  bottom: 18px;
+  color: #758ba0;
+  font-size: 0.8rem;
+}
+
+.cabecalho,
+.controles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--cinza);
+  font-size: 0.85rem;
+}
+
+.marca {
+  color: var(--azul);
+  letter-spacing: 0.15em;
+}
+
+.indicador i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: #56e68b;
+  box-shadow: 0 0 10px #56e68b;
+}
+
+.conteudo-jogo {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 32px;
+  align-items: center;
+  min-height: 470px;
+}
+
+.painel-casa {
+  height: 330px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #29445b;
+  background:
+    linear-gradient(180deg, transparent 60%, #101c29 60%),
+    linear-gradient(135deg, #142b42, #0b111b);
+}
+
+.painel-casa::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--azul);
+  box-shadow: 0 0 18px var(--azul);
+}
+
+.janela {
+  position: absolute;
+  inset: 28px 25px 105px;
+  overflow: hidden;
+  border: 5px solid #273d52;
+  background: linear-gradient(#101c32 55%, #263a50);
+}
+
+.cidade {
+  position: absolute;
+  inset: 35% 0 0;
+  opacity: 0.8;
+  background:
+    linear-gradient(90deg, transparent 4%, #102237 4% 13%, transparent 13% 17%,
+    #172c42 17% 29%, transparent 29% 36%, #102237 36% 48%, transparent 48% 53%,
+    #1d344a 53% 68%, transparent 68% 73%, #102237 73% 88%, transparent 88%),
+    linear-gradient(transparent 0 30%, #f5b94c 30% 34%, transparent 34% 60%,
+    #65d4ff 60% 64%, transparent 64%);
+}
+
+.painel-digital {
+  position: absolute;
+  right: 18px;
+  bottom: 27px;
+  padding: 12px;
+  border: 1px solid #4ebfff;
+  color: #b6eaff;
+  background: #0a1b2b;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  box-shadow: 0 0 15px #298ec355;
+}
+
+.luz {
+  position: absolute;
+  top: 22px;
+  right: 18px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.luz-verde {
+  background: #58e78b;
+  box-shadow: 0 0 12px #58e78b;
+}
+
+.painel-historia {
+  max-width: 520px;
+}
+
+.painel-historia h2 {
+  color: white;
+  line-height: 1.25;
+}
+
+.texto-cena {
+  color: #c1d0df;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+.respostas {
+  display: grid;
+  gap: 10px;
+  margin: 22px 0;
+}
+
+.respostas .botao {
+  text-align: left;
+  line-height: 1.5;
+}
+
+.botao-pequeno {
+  padding: 8px 12px;
+  font-size: 0.85rem;
+}
+
+.controles {
+  border-top: 1px solid #23384c;
+  padding-top: 14px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.controles b {
+  color: var(--azul);
+}
+
+dialog {
+  width: min(420px, 90vw);
+  padding: 28px;
+  color: var(--texto);
+  border: 1px solid var(--azul);
+  background: #101b2b;
+  box-shadow: 0 0 30px #000;
+}
+
+dialog::backdrop {
+  background: #02060bd9;
+}
+
+dialog h2 {
+  color: var(--azul);
+}
+
+.fechar {
+  float: right;
+  border: 0;
+  background: transparent;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .tela {
+    padding: 22px;
+  }
+
+  .conteudo-jogo {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 24px 0;
+  }
+
+  .painel-casa {
+    height: 210px;
+  }
+
+  .controles {
+    justify-content: flex-start;
+  }
+
+  .rodape {
+    position: static;
+    margin-top: 45px;
+  }
+}

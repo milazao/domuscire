@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Domuscire</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="game">
+    <section id="tela-inicial" class="tela tela-inicial">
+      <div class="grade-fundo"></div>
+      <p class="etiqueta">RESIDÊNCIA EXPERIMENTAL • PROTOCOLO 01</p>
+      <h1>DOMUSCIRE</h1>
+      <p class="subtitulo">Uma casa que aprende. Um mistério que desperta.</p>
+
+      <nav class="menu" aria-label="Menu principal">
+        <button id="botao-jogar" class="botao botao-destaque">Jogar</button>
+        <button id="botao-configuracoes" class="botao">Configurações</button>
+        <button id="botao-creditos" class="botao">Créditos</button>
+      </nav>
+
+      <p class="rodape">W A S D: movimentar &nbsp; • &nbsp; Espaço: conversar &nbsp; • &nbsp; E: interagir</p>
+    </section>
+
+    <section id="tela-jogo" class="tela tela-jogo escondida">
+      <header class="cabecalho">
+        <span class="marca">DOMUSCIRE</span>
+        <span class="indicador"><i></i> SISTEMA ONLINE</span>
+      </header>
+
+      <div class="conteudo-jogo">
+        <div class="painel-casa" aria-hidden="true">
+          <div class="janela">
+            <div class="cidade"></div>
+          </div>
+          <div class="painel-digital">RESIDÊNCIA<br>EXPERIMENTAL</div>
+          <div class="luz luz-verde"></div>
+        </div>
+
+        <div class="painel-historia">
+          <p id="rotulo-cena" class="etiqueta">NOVA PARTIDA</p>
+          <h2 id="titulo-cena">Bem-vindo à sua nova casa.</h2>
+          <p id="texto-cena" class="texto-cena"></p>
+          <div id="respostas" class="respostas"></div>
+          <button id="botao-voltar" class="botao botao-pequeno">Voltar ao menu</button>
+        </div>
+      </div>
+
+      <footer class="controles">
+        <span><b>W A S D</b> movimentar</span>
+        <span><b>ESPAÇO</b> conversar</span>
+        <span><b>E</b> interagir</span>
+      </footer>
+    </section>
+
+    <dialog id="dialogo-info">
+      <button id="fechar-dialogo" class="fechar" aria-label="Fechar">×</button>
+      <h2 id="titulo-dialogo"></h2>
+      <p id="texto-dialogo"></p>
+    </dialog>
+  </main>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
