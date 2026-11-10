@@ -7,60 +7,47 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="game">
-    <section id="tela-inicial" class="tela tela-inicial">
-      <div class="grade-fundo"></div>
-      <p class="etiqueta">RESIDÊNCIA EXPERIMENTAL • PROTOCOLO 01</p>
+  <main class="jogo">
+    <header class="cabecalho">
+      <span class="marca">DOMUSCIRE</span>
+      <span class="status"><i></i> RESIDÊNCIA EXPERIMENTAL</span>
+    </header>
+
+    <section id="tela-inicial" class="tela central">
+      <p class="rotulo">PROTOCOLO DE ADAPTAÇÃO • 01</p>
       <h1>DOMUSCIRE</h1>
       <p class="subtitulo">Uma casa que aprende. Um mistério que desperta.</p>
-
-      <nav class="menu" aria-label="Menu principal">
-        <button id="botao-jogar" class="botao botao-destaque">Jogar</button>
-        <button id="botao-configuracoes" class="botao">Configurações</button>
-        <button id="botao-creditos" class="botao">Créditos</button>
-      </nav>
-
-      <p class="rodape">W A S D: movimentar &nbsp; • &nbsp; Espaço: conversar &nbsp; • &nbsp; E: interagir</p>
+      <button id="jogar" class="botao principal">Iniciar</button>
+      <p class="credito">Uma experiência experimental de milps julips</p>
     </section>
 
-    <section id="tela-jogo" class="tela tela-jogo escondida">
-      <header class="cabecalho">
-        <span class="marca">DOMUSCIRE</span>
-        <span class="indicador"><i></i> SISTEMA ONLINE</span>
-      </header>
-
-      <div class="conteudo-jogo">
-        <div class="painel-casa" aria-hidden="true">
-          <div class="janela">
-            <div class="cidade"></div>
-          </div>
-          <div class="painel-digital">RESIDÊNCIA<br>EXPERIMENTAL</div>
-          <div class="luz luz-verde"></div>
-        </div>
-
-        <div class="painel-historia">
-          <p id="rotulo-cena" class="etiqueta">NOVA PARTIDA</p>
-          <h2 id="titulo-cena">Bem-vindo à sua nova casa.</h2>
-          <p id="texto-cena" class="texto-cena"></p>
-          <div id="respostas" class="respostas"></div>
-          <button id="botao-voltar" class="botao botao-pequeno">Voltar ao menu</button>
-        </div>
+    <section id="tela-historia" class="tela escondida">
+      <p class="rotulo">INTRODUÇÃO</p>
+      <h2>Uma nova vida começa</h2>
+      <div class="historia">
+        <p>[Uma cidade tecnológica surge ao anoitecer. Um veículo se aproxima de uma residência moderna, cercada por jardins automatizados.]</p>
+        <p><strong>NARRADOR:</strong> “A tecnologia sempre prometeu tornar nossas vidas mais simples. Casas capazes de antecipar necessidades, ambientes que se adaptam aos nossos hábitos e sistemas que aprendem conosco.”</p>
+        <p>[As luzes da casa se acendem. A porta se abre antes que o protagonista toque a maçaneta.]</p>
+        <p><strong>NARRADOR:</strong> “Agora, essa promessa está prestes a se tornar realidade.”</p>
+        <p>[O protagonista desce do veículo com as malas. Um painel digital acende na entrada.]</p>
+        <p><strong>SISTEMA DA CASA:</strong> “Bem-vindo à Residência Experimental. Sua participação é fundamental para o desenvolvimento da próxima geração de moradias inteligentes.”</p>
+        <p>[A porta se fecha. Gráficos e indicadores aparecem nas paredes enquanto a casa registra a chegada do novo morador.]</p>
+        <p><strong>SISTEMA DA CASA:</strong> “Configuração inicial concluída. Iniciando protocolo de adaptação do residente.”</p>
+        <p>[As luzes piscam por um instante e voltam ao normal.]</p>
+        <p><strong>NARRADOR:</strong> “Mas viver em uma casa que aprende com você também significa aprender a viver com ela. Sua nova vida começa agora.”</p>
       </div>
-
-      <footer class="controles">
-        <span><b>W A S D</b> movimentar</span>
-        <span><b>ESPAÇO</b> conversar</span>
-        <span><b>E</b> interagir</span>
-      </footer>
+      <button id="continuar" class="botao principal">Continuar</button>
     </section>
 
-    <dialog id="dialogo-info">
-      <button id="fechar-dialogo" class="fechar" aria-label="Fechar">×</button>
-      <h2 id="titulo-dialogo"></h2>
-      <p id="texto-dialogo"></p>
-    </dialog>
-  </main>
+    <section id="tela-pergunta" class="tela escondida">
+      <p id="rotulo-pergunta" class="rotulo"></p>
+      <h2 id="enunciado"></h2>
+      <div id="respostas" class="respostas"></div>
+      <p id="mensagem" class="mensagem" aria-live="polite"></p>
+    </section>
 
+    <footer>Uma experiência narrativa sobre tecnologia, escolhas e confiança.</footer>
+  </main>
   <script type="module" src="script.js"></script>
 </body>
 </html>
